@@ -1,0 +1,533 @@
+mixed-port: 7890
+allow-lan: false
+log-level: info
+secret: 
+external-controller: 127.0.0.1:9090
+# ipv6: false
+ipv6: true
+global-client-fingerprint: hconfig(ConfigEnum.utls)
+mode: rule
+dns:
+  enable: true
+  use-hosts: true
+  # ipv6: false
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/16
+  listen: 127.0.0.1:6868
+  prefer-h3: true #Enable DoH support for HTTP/3,
+  fake-ip-filter:
+     - 'dl.kamnet.tk'
+     - 'www.wikipedia.org'
+  default-nameserver:
+    - 1.1.1.1
+    - 8.8.8.8
+    - 1.0.0.1
+  nameserver:
+#    - https://dl.kamnet.tk/fo9uu8PsfUF/dns/dns-query
+    - https://8.8.8.8/dns-query#h3=true
+    - https://1.1.1.1/dns-query#PROXY
+    - https://8.8.8.8/dns-query#PROXY
+    - https://1.0.0.1/dns-query#PROXY
+    #- https://8.8.8.8/dns-query#PROXY&h3=true
+    
+    - 8.8.8.8
+    - 1.1.1.1
+profile:
+  # Storing select records
+  store-selected: false
+
+proxy-groups:
+  # - name: "tuic+vless"
+  #   type: relay
+  #   proxies:
+  #     - vless
+  #     - tuic
+
+  - name: PROXY
+    proxies:
+      - auto_fallback
+    use:
+      - all_proxies
+    type: select
+
+
+  
+
+  
+
+
+  # - name: OnIranSites_lite
+  #   proxies:
+  #   % if typ=="all"
+  #     - PROXY
+  #     - DIRECT
+  #   % else:
+  #     - DIRECT
+  #     - PROXY
+  #   % endif
+  #   type: select
+
+  # - name: OnNotFilteredSites_lite
+  #   proxies:
+  #   % if typ =="lite"
+  #     - DIRECT
+  #     - PROXY
+  #   % else:
+  #     - PROXY
+  #     - DIRECT
+  #   % endif
+  #   type: select  
+
+  # - name: OnProxyIssue_lite
+  #   proxies:
+  #   % if typ =="all"
+  #     - REJECT
+  #     - DIRECT
+  #   % else:
+  #     - DIRECT
+  #     - REJECT
+  #   % endif
+    # type: select
+
+  - name: auto
+    use:
+      - all_proxies
+    type: url-test
+    url: http://cp.cloudflare.com
+    interval: 300
+
+  - name: auto_fallback
+    type: fallback
+    url: 'http://cp.cloudflare.com'
+    interval: 300
+    proxies:
+        - auto
+        - DIRECT
+proxies:
+- name: tls_WS_CDN_vless dl.kamnet.tk
+  type: vless
+  server: npmjs.org
+  port: 443
+  tun:
+    enable: 'true'
+    stack: system
+  uuid: 41185371-9bfa-48df-a1eb-9c347843437c
+  servername: dl.kamnet.tk
+  tls: true
+  client-fingerprint: chrome
+  udp: true
+  skip-cert-verify: false
+  network: ws
+  ws-opts:
+    path: /fo9uu8PsfUF/vlessws
+    headers:
+      Host: dl.kamnet.tk
+- name: tls_WS_CDN_trojan dl.kamnet.tk
+  type: trojan
+  server: npmjs.org
+  port: 443
+  tun:
+    enable: 'true'
+    stack: system
+  password: 41185371-9bfa-48df-a1eb-9c347843437c
+  sni: dl.kamnet.tk
+  client-fingerprint: chrome
+  udp: true
+  skip-cert-verify: false
+  network: ws
+  ws-opts:
+    path: /fo9uu8PsfUF/trojanws
+    headers:
+      Host: dl.kamnet.tk
+- name: tls_WS_CDN_vmess dl.kamnet.tk
+  type: vmess
+  server: npmjs.org
+  port: 443
+  tun:
+    enable: 'true'
+    stack: system
+  uuid: 41185371-9bfa-48df-a1eb-9c347843437c
+  servername: dl.kamnet.tk
+  tls: true
+  client-fingerprint: chrome
+  alterId: 0
+  cipher: auto
+  udp: true
+  skip-cert-verify: false
+  network: ws
+  ws-opts:
+    path: /fo9uu8PsfUF/vmessws
+    headers:
+      Host: dl.kamnet.tk
+- name: tls_grpc_CDN_vless dl.kamnet.tk
+  type: vless
+  server: npmjs.org
+  port: 443
+  tun:
+    enable: 'true'
+    stack: system
+  uuid: 41185371-9bfa-48df-a1eb-9c347843437c
+  servername: dl.kamnet.tk
+  tls: true
+  client-fingerprint: chrome
+  udp: true
+  skip-cert-verify: false
+  network: grpc
+  grpc-opts:
+    grpc-service-name: fo9uu8PsfUF-vlgrpc
+- name: tls_grpc_CDN_trojan dl.kamnet.tk
+  type: trojan
+  server: npmjs.org
+  port: 443
+  tun:
+    enable: 'true'
+    stack: system
+  password: 41185371-9bfa-48df-a1eb-9c347843437c
+  sni: dl.kamnet.tk
+  client-fingerprint: chrome
+  udp: true
+  skip-cert-verify: false
+  network: grpc
+  grpc-opts:
+    grpc-service-name: fo9uu8PsfUF-trgrpc
+- name: tls_grpc_CDN_vmess dl.kamnet.tk
+  type: vmess
+  server: npmjs.org
+  port: 443
+  tun:
+    enable: 'true'
+    stack: system
+  uuid: 41185371-9bfa-48df-a1eb-9c347843437c
+  servername: dl.kamnet.tk
+  tls: true
+  client-fingerprint: chrome
+  alterId: 0
+  cipher: auto
+  udp: true
+  skip-cert-verify: false
+  network: grpc
+  grpc-opts:
+    grpc-service-name: fo9uu8PsfUF-vmgrpc
+- name: http_WS_CDN_vless dl.kamnet.tk
+  type: vless
+  server: npmjs.org
+  port: 80
+  tun:
+    enable: 'true'
+    stack: system
+  uuid: 41185371-9bfa-48df-a1eb-9c347843437c
+  servername: dl.kamnet.tk
+  tls: false
+  client-fingerprint: chrome
+  udp: true
+  skip-cert-verify: false
+  network: ws
+  ws-opts:
+    path: /fo9uu8PsfUF/vlessws
+    headers:
+      Host: dl.kamnet.tk
+- name: http_WS_CDN_vmess dl.kamnet.tk
+  type: vmess
+  server: npmjs.org
+  port: 80
+  tun:
+    enable: 'true'
+    stack: system
+  uuid: 41185371-9bfa-48df-a1eb-9c347843437c
+  servername: dl.kamnet.tk
+  tls: false
+  client-fingerprint: chrome
+  alterId: 0
+  cipher: auto
+  udp: true
+  skip-cert-verify: false
+  network: ws
+  ws-opts:
+    path: /fo9uu8PsfUF/vmessws
+    headers:
+      Host: dl.kamnet.tk
+- name: tls_WS_direct_vless cpanel.kamnet.tk
+  type: vless
+  server: cpanel.kamnet.tk
+  port: 443
+  tun:
+    enable: 'true'
+    stack: system
+  uuid: 41185371-9bfa-48df-a1eb-9c347843437c
+  servername: cpanel.kamnet.tk
+  tls: true
+  client-fingerprint: chrome
+  udp: true
+  skip-cert-verify: false
+  network: ws
+  ws-opts:
+    path: /fo9uu8PsfUF/vlessws
+    headers:
+      Host: cpanel.kamnet.tk
+- name: tls_WS_direct_trojan cpanel.kamnet.tk
+  type: trojan
+  server: cpanel.kamnet.tk
+  port: 443
+  tun:
+    enable: 'true'
+    stack: system
+  password: 41185371-9bfa-48df-a1eb-9c347843437c
+  sni: cpanel.kamnet.tk
+  client-fingerprint: chrome
+  udp: true
+  skip-cert-verify: false
+  network: ws
+  ws-opts:
+    path: /fo9uu8PsfUF/trojanws
+    headers:
+      Host: cpanel.kamnet.tk
+- name: tls_WS_direct_vmess cpanel.kamnet.tk
+  type: vmess
+  server: cpanel.kamnet.tk
+  port: 443
+  tun:
+    enable: 'true'
+    stack: system
+  uuid: 41185371-9bfa-48df-a1eb-9c347843437c
+  servername: cpanel.kamnet.tk
+  tls: true
+  client-fingerprint: chrome
+  alterId: 0
+  cipher: auto
+  udp: true
+  skip-cert-verify: false
+  network: ws
+  ws-opts:
+    path: /fo9uu8PsfUF/vmessws
+    headers:
+      Host: cpanel.kamnet.tk
+- name: tls_tcp_direct_vless cpanel.kamnet.tk
+  type: vless
+  server: cpanel.kamnet.tk
+  port: 443
+  tun:
+    enable: 'true'
+    stack: system
+  uuid: 41185371-9bfa-48df-a1eb-9c347843437c
+  servername: cpanel.kamnet.tk
+  tls: true
+  client-fingerprint: chrome
+  udp: true
+  skip-cert-verify: false
+  network: http
+  http-opts:
+    path:
+    - /fo9uu8PsfUF/vltc
+- name: tls_tcp_direct_trojan cpanel.kamnet.tk
+  type: trojan
+  server: cpanel.kamnet.tk
+  port: 443
+  tun:
+    enable: 'true'
+    stack: system
+  password: 41185371-9bfa-48df-a1eb-9c347843437c
+  sni: cpanel.kamnet.tk
+  client-fingerprint: chrome
+  udp: true
+  skip-cert-verify: false
+  network: http
+  http-opts:
+    path:
+    - /fo9uu8PsfUF/trtc
+- name: tls_tcp_direct_vmess cpanel.kamnet.tk
+  type: vmess
+  server: cpanel.kamnet.tk
+  port: 443
+  tun:
+    enable: 'true'
+    stack: system
+  uuid: 41185371-9bfa-48df-a1eb-9c347843437c
+  servername: cpanel.kamnet.tk
+  tls: true
+  client-fingerprint: chrome
+  alterId: 0
+  cipher: auto
+  udp: true
+  skip-cert-verify: false
+  network: http
+  http-opts:
+    path:
+    - /fo9uu8PsfUF/vmtc
+- name: http_WS_direct_vless cpanel.kamnet.tk
+  type: vless
+  server: cpanel.kamnet.tk
+  port: 80
+  tun:
+    enable: 'true'
+    stack: system
+  uuid: 41185371-9bfa-48df-a1eb-9c347843437c
+  servername: cpanel.kamnet.tk
+  tls: false
+  client-fingerprint: chrome
+  udp: true
+  skip-cert-verify: false
+  network: ws
+  ws-opts:
+    path: /fo9uu8PsfUF/vlessws
+    headers:
+      Host: cpanel.kamnet.tk
+- name: http_WS_direct_vmess cpanel.kamnet.tk
+  type: vmess
+  server: cpanel.kamnet.tk
+  port: 80
+  tun:
+    enable: 'true'
+    stack: system
+  uuid: 41185371-9bfa-48df-a1eb-9c347843437c
+  servername: cpanel.kamnet.tk
+  tls: false
+  client-fingerprint: chrome
+  alterId: 0
+  cipher: auto
+  udp: true
+  skip-cert-verify: false
+  network: ws
+  ws-opts:
+    path: /fo9uu8PsfUF/vmessws
+    headers:
+      Host: cpanel.kamnet.tk
+- name: http_tcp_direct_vless cpanel.kamnet.tk
+  type: vless
+  server: cpanel.kamnet.tk
+  port: 80
+  tun:
+    enable: 'true'
+    stack: system
+  uuid: 41185371-9bfa-48df-a1eb-9c347843437c
+  servername: cpanel.kamnet.tk
+  tls: false
+  client-fingerprint: chrome
+  udp: true
+  skip-cert-verify: false
+  network: http
+  http-opts:
+    path:
+    - /fo9uu8PsfUF/vltc
+- name: http_tcp_direct_vmess cpanel.kamnet.tk
+  type: vmess
+  server: cpanel.kamnet.tk
+  port: 80
+  tun:
+    enable: 'true'
+    stack: system
+  uuid: 41185371-9bfa-48df-a1eb-9c347843437c
+  servername: cpanel.kamnet.tk
+  tls: false
+  client-fingerprint: chrome
+  alterId: 0
+  cipher: auto
+  udp: true
+  skip-cert-verify: false
+  network: http
+  http-opts:
+    path:
+    - /fo9uu8PsfUF/vmtc
+- name: tls_grpc_direct_vless cpanel.kamnet.tk
+  type: vless
+  server: cpanel.kamnet.tk
+  port: 443
+  tun:
+    enable: 'true'
+    stack: system
+  uuid: 41185371-9bfa-48df-a1eb-9c347843437c
+  servername: cpanel.kamnet.tk
+  tls: true
+  client-fingerprint: chrome
+  udp: true
+  skip-cert-verify: false
+  network: grpc
+  grpc-opts:
+    grpc-service-name: fo9uu8PsfUF-vlgrpc
+- name: tls_grpc_direct_trojan cpanel.kamnet.tk
+  type: trojan
+  server: cpanel.kamnet.tk
+  port: 443
+  tun:
+    enable: 'true'
+    stack: system
+  password: 41185371-9bfa-48df-a1eb-9c347843437c
+  sni: cpanel.kamnet.tk
+  client-fingerprint: chrome
+  udp: true
+  skip-cert-verify: false
+  network: grpc
+  grpc-opts:
+    grpc-service-name: fo9uu8PsfUF-trgrpc
+- name: tls_grpc_direct_vmess cpanel.kamnet.tk
+  type: vmess
+  server: cpanel.kamnet.tk
+  port: 443
+  tun:
+    enable: 'true'
+    stack: system
+  uuid: 41185371-9bfa-48df-a1eb-9c347843437c
+  servername: cpanel.kamnet.tk
+  tls: true
+  client-fingerprint: chrome
+  alterId: 0
+  cipher: auto
+  udp: true
+  skip-cert-verify: false
+  network: grpc
+  grpc-opts:
+    grpc-service-name: fo9uu8PsfUF-vmgrpc
+
+proxy-providers:
+  all_proxies:
+    type: http
+    url: "https://dl.kamnet.tk/fo9uu8PsfUF/41185371-9bfa-48df-a1eb-9c347843437c/clash/meta/proxies.yml?mode=new&435366"
+    path: dl.kamnet.tk/41185371-9bfa-48df-a1eb-9c347843437c-meta-proxies435366.yaml
+    health-check:
+      enable: true
+      interval: 600
+      url: http://www.gstatic.com/generate_204    
+
+  
+rule-providers:
+
+  blocked:
+    type: http
+    behavior: classical
+    url: "https://dl.kamnet.tk/fo9uu8PsfUF/clash/rules/blocked-sites.yml"
+    path: ./ruleset/blocked.yaml
+    interval: 432000
+
+  tmpblocked:
+    type: http
+    behavior: classical
+    url: "https://dl.kamnet.tk/fo9uu8PsfUF/clash/rules/tmp-blocked-sites.yml"
+    path: ./ruleset/tmpblocked.yaml
+    interval: 432000
+
+  open:
+    type: http
+    behavior: classical
+    url: "https://dl.kamnet.tk/fo9uu8PsfUF/clash/rules/open-sites.yml"
+    path: ./ruleset/open.yaml
+    interval: 432000    
+
+  ads:
+    type: http
+    behavior: classical
+    url: "https://dl.kamnet.tk/fo9uu8PsfUF/clash/rules/ads-sites.yml"
+    path: ./ruleset/ads.yaml
+    interval: 432000   
+
+rules:
+  - DOMAIN,www.wikipedia.org,DIRECT
+  # - DOMAIN,dl.kamnet.tk,DIRECT
+  # - DOMAIN,,DIRECT
+  # - IP-CIDR,/32,DIRECT
+  - IP-CIDR,10.10.34.0/24,PROXY
+  - RULE-SET,tmpblocked,PROXY
+  - RULE-SET,blocked,PROXY
+  - GEOIP,IR,DIRECT
+  - DOMAIN-SUFFIX,.ir,DIRECT
+  - RULE-SET,open,DIRECT
+  - RULE-SET,ads,REJECT
+  - MATCH,DIRECT
