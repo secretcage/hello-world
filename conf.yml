@@ -321,8 +321,8 @@ proxies:
 proxy-providers:
   all_proxies:
     type: http
-    url: "https://dl.kamnet.tk/fo9uu8PsfUF/41185371-9bfa-48df-a1eb-9c347843437c/clash/normal/proxies.yml?mode=new&461303"
-    path: dl.kamnet.tk/41185371-9bfa-48df-a1eb-9c347843437c-normal-proxies461303.yaml
+    url: "https://dl.kamnet.tk/fo9uu8PsfUF/41185371-9bfa-48df-a1eb-9c347843437c/clash/normal/proxies.yml?mode=new&359543"
+    path: dl.kamnet.tk/41185371-9bfa-48df-a1eb-9c347843437c-normal-proxies359543.yaml
     health-check:
       enable: true
       interval: 600
